@@ -11,12 +11,16 @@ var fileServer = new(nodeStatic.Server)();
 //   fileServer.serve(req, res);
 // }).listen(8080);
 
+
 const options = {
   key: fs.readFileSync('188.166.228.107.key'),
   cert: fs.readFileSync('188.166.228.107.cert')
 };
 
 var app = https.createServer(options, (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
   fileServer.serve(req, res);
 }).listen(8080);
 
