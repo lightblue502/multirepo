@@ -18,9 +18,9 @@ const options = {
 };
 
 var app = https.createServer(options, (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
+  // res.header('Access-Control-Allow-Origin', '*')
+  // res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
   fileServer.serve(req, res);
 }).listen(8080);
 
