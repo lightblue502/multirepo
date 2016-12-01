@@ -18,7 +18,7 @@ const options = {
 
 var app = https.createServer(options, (req, res) => {
   fileServer.serve(req, res);
-}).listen(8000);
+}).listen(8080);
 
 
 var io = socketIO.listen(app);
