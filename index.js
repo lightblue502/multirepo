@@ -89,7 +89,10 @@ io.on('connection', function(socket) {
     console.log('getting turn server');
     https.get(turnUrl, (res) => {
       
-      socket.broadcast.emit('responeTurnServer', res);
+      res.on('data', (d) => {
+        console.log(d);
+    });
+      // socket.broadcast.emit('responeTurnServer', res);
    
 
     }).on('error', (e) => {
