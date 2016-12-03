@@ -43,6 +43,8 @@ io.on('connection', function(socket) {
     socket.emit('log', array);
   }
 
+
+
   socket.on('message', function(message) {
     log('Client said: ', message);
     // for a real app, would be room-only (not broadcast)
@@ -81,6 +83,18 @@ io.on('connection', function(socket) {
         }
       });
     }
+  });
+
+  socket.on('getTurnServer', function(turnUrl){
+    console.log('getting turn server');
+    https.get(turnUrl, (res) => {
+      
+      socket.broadcast.emit('responeTurnServer', res);
+   
+
+    }).on('error', (e) => {
+      console.error(e);
+    });
   });
 
   socket.on('bye', function(){

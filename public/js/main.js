@@ -227,23 +227,39 @@ function requestTurn(turnURL) {
   }
   if (!turnExists) {
     console.log('Getting TURN server from ', turnURL);
-    // No TURN server. Get one from computeengineondemand.appspot.com:
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var turnServer = JSON.parse(xhr.responseText);
-        console.log('Got TURN server: ', turnServer);
-        pcConfig.iceServers.push({
-          'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
-          'credential': turnServer.password
-        });
-        turnReady = true;
-      }
-    };
-    xhr.open('GET', turnURL, true);
-    xhr.send();
+
+    socket.emit('getTurnServer', turnURL);
+    // No TU RN server. Get one from computeengineondemand.appspot.com:
+    // var xhr = new XMLHttpRequest();
+    // xhr.onreadystatechange = function() {
+    //   if (xhr.readyState === 4 && xhr.status === 200) {
+    //     var turnServer = JSON.parse(xhr.responseText);
+    //     console.log('Got TURN server: ', turnServer);
+    //     pcConfig.iceServers.push({
+    //       'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+    //       'credential': turnServer.password
+    //     });
+    //     console.log(pcConfig.iceServers)
+    //     turnReady = true;
+    //   }
+    // };
+    // xhr.open('GET', turnURL, true);
+    // xhr.send();
   }
 }
+
+
+socket.on('responeTurnServer', function(res){
+  console.log(res);
+  var turnServer = JSON.parse(res.responseText);
+  console.log('Got TURN server: ', turnServer);
+  pcConfig.iceServers.push({
+    'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+    'credential': turnServer.password
+  });
+  console.log("iceServer", pcConfig.iceServers);
+  turnReady = true;
+})
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
