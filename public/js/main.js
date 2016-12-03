@@ -258,10 +258,14 @@ socket.on('responeTurnServer', function(res){
   var turnServer = JSON.parse(res.res);
   console.log('Got TURN server: ', turnServer);
 	console.log(turnServer.uris[0] );
- pcConfig.iceServers.push({
-    'url': 'turn:' + turnServer.username + '@' + turnServer.uris[0],
-    'credential': turnServer.password
+
+  turnServer.uris.forEach((uri)=>{
+    pcConfig.iceServers.push({
+      'url': 'turn:' + turnServer.username + '@' + uri,
+      'credential': turnServer.password
+    });
   });
+ 
   console.log("iceServer", pcConfig.iceServers);
   turnReady = true;
 })
