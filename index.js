@@ -1,33 +1,41 @@
 'use strict';
 
 var os = require('os');
-var nodeStatic = require('node-static');
+// var nodeStatic = require('node-static');
+var express = require('express');
+var app = express();
 var https = require('https');
-var socketIO = require('socket.io');
-const fs = require('fs');
+// var https = require('https');
+var fs = require('fs');
 
-var fileServer = new(nodeStatic.Server)();
-// var app = http.createServer(function(req, res) {
-//   fileServer.serve(req, res);
-// }).listen(8080);
-
+console.log(__dirname + '/public')
+app.use(express.static(__dirname + '/public'));
 
 const options = {
   key: fs.readFileSync('188.166.228.107.key'),
-  cert: fs.readFileSync('188.166.228.107.cert')
+  cert: fs.readFileSync('188.166.228.107.cert'),
+  // requestCert: false,
+  // rejectUnauthorized: false
+  // key: fs.readFileSync('C:/devs/xampp/apache/conf/ssl.key/server.key'),
+  // cert: fs.readFileSync('C:/devs/xampp/apache/conf/ssl.crt/server.crt')
 };
 
-var app = https.createServer(options, (req, res) => {
-  // res.header('Access-Control-Allow-Origin', '*')
-  // res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
-  // res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
-  fileServer.serve(req, res);
-}).listen(8080);
+var server = https.createServer(options, app);
+
+server.listen(8000);
+var io = require('socket.io')(server);
+
+app.use(function (req, res, next) {
+  console.log('Time:', Date.now());
+  res.header('Access-Control-Allow-Origin-', "*"); 
+  res.header('Access-Control-Allow-Methods­','GET,PUT,POST,DELETE'); 
+  res.header('Access-Control-Allow-Headers­', 'Content-Type'); 
+  next();
+}); 
 
 
-var io = socketIO.listen(app);
-io.sockets.on('connection', function(socket) {
-
+io.on('connection', function(socket) {
+  console.log("io connect success");
   // convenience function to log server messages on the client
   function log() {
     var array = ['Message from server:'];
@@ -45,6 +53,7 @@ io.sockets.on('connection', function(socket) {
     log('Received request to create or join room ' + room);
 
     var numClients = io.sockets.sockets.length;
+    console.log("io.length", io.sockets.sockets.length)
     log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
     if (numClients === 1) {
@@ -54,10 +63,10 @@ io.sockets.on('connection', function(socket) {
 
     } else if (numClients === 2) {
       log('Client ID ' + socket.id + ' joined room ' + room);
-      io.sockets.in(room).emit('join', room);
+      io.in(room).emit('join', room);
       socket.join(room);
       socket.emit('joined', room, socket.id);
-      io.sockets.in(room).emit('ready');
+      io.in(room).emit('ready');
     } else { // max two clients
       socket.emit('full', room);
     }
