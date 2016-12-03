@@ -261,7 +261,8 @@ socket.on('responeTurnServer', function(res){
 
   turnServer.uris.forEach((uri)=>{
     pcConfig.iceServers.push({
-      'url': 'turn:' + turnServer.username + '@' + uri,
+      'url': uri,
+      'username' : turnServer.username,
       'credential': turnServer.password
     });
   });
