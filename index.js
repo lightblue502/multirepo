@@ -103,10 +103,7 @@ io.on('connection', function(socket) {
   });
 
   function sendTurnUrl(texts){
-	console.log(" texts", texts);
-	console.log(" type", typeof texts);
   	var socket = io.emit('responeTurnServer', {res: texts});
-	console.log(socket);
   }
 
   socket.on('bye', function(){
