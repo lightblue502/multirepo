@@ -43,7 +43,9 @@ io.on('connection', function(socket) {
     socket.emit('log', array);
   }
 
-
+	socket.on('error', function (reason){
+        console.error('Unable to connect Socket.IO', reason);
+    });
 
   socket.on('message', function(message) {
     log('Client said: ', message);
@@ -90,15 +92,22 @@ io.on('connection', function(socket) {
     https.get(turnUrl, (res) => {
       
       res.on('data', (chunk) => {
-        var textChunk = chunk.toString('utf8');
-        socket.broadcast.emit('responeTurnServer', textChunk);
-        // process utf8 text chunk
+        var texts = chunk.toString('utf8');
+	sendTurnUrl(texts);
+	// process utf8 text chunk
       });
 
     }).on('error', (e) => {
       console.error(e);
     });
   });
+
+  function sendTurnUrl(texts){
+	console.log(" texts", texts);
+	console.log(" type", typeof texts);
+  	var socket = io.emit('responeTurnServer', {res: texts});
+	console.log(socket);
+  }
 
   socket.on('bye', function(){
     console.log('received bye');

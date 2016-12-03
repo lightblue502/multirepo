@@ -29,6 +29,9 @@ var room = 'foo';
 // room = prompt('Enter room name:');
 
 var socket = io.connect();
+socket.on('error', function (reason){
+        console.error('Unable to connect Socket.IO', reason);
+    });
 
 if (room !== '') {
   socket.emit('create or join', room);
@@ -250,11 +253,13 @@ function requestTurn(turnURL) {
 
 
 socket.on('responeTurnServer', function(res){
-  console.log(res);
-  var turnServer = JSON.parse(res.responseText);
+	console.log("responing turn server.." );
+  console.log(typeof res);
+  var turnServer = JSON.parse(res.res);
   console.log('Got TURN server: ', turnServer);
-  pcConfig.iceServers.push({
-    'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+	console.log(turnServer.uris[0] );
+ pcConfig.iceServers.push({
+    'url': 'turn:' + turnServer.username + '@' + turnServer.uris[0],
     'credential': turnServer.password
   });
   console.log("iceServer", pcConfig.iceServers);
