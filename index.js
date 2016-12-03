@@ -22,7 +22,7 @@ const options = {
 
 var server = https.createServer(options, app);
 
-server.listen(8000);
+server.listen(8080);
 var io = require('socket.io')(server);
 
 app.use(function (req, res, next) {
@@ -89,11 +89,11 @@ io.on('connection', function(socket) {
     console.log('getting turn server');
     https.get(turnUrl, (res) => {
       
-      res.on('data', (d) => {
-        console.log(d);
-    });
-      // socket.broadcast.emit('responeTurnServer', res);
-   
+      res.on('data', (chunk) => {
+        var textChunk = chunk.toString('utf8');
+        socket.broadcast.emit('responeTurnServer', textChunk);
+        // process utf8 text chunk
+      });
 
     }).on('error', (e) => {
       console.error(e);
