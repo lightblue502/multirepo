@@ -9,9 +9,29 @@ var remoteStream;
 var turnReady;
 
 var pcConfig = {
-  'iceServers': [{
-    'url': 'stun:stun.l.google.com:19302'
-  }]
+  'iceServers': [
+    {'url': 'stun:stun.l.google.com:19302'},
+    {
+      "url": "turn:104.155.199.249:3478?transport=udp",
+      "username": "1480997407:41784574",
+      "cridential": "7LFNAgCmUnENq+Sl+HXM7qER3bk="
+    },
+    {
+      "url": "turn:104.155.199.249:3478?transport=tcp",
+      "username": "1480997407:41784574",
+      "cridential": "7LFNAgCmUnENq+Sl+HXM7qER3bk="
+    },
+    {
+      "url": "turn:104.155.199.249:3479?transport=udp",
+      "username": "1480997407:41784574",
+      "cridential": "7LFNAgCmUnENq+Sl+HXM7qER3bk="
+    },
+    {
+      "url": "turn:104.155.199.249:3479?transport=tcp",
+      "username": "1480997407:41784574",
+      "cridential": "7LFNAgCmUnENq+Sl+HXM7qER3bk="
+    }
+  ]
 };
 
 // Set up audio and video regardless of what devices are present.
@@ -130,11 +150,11 @@ var constraints = {
 
 console.log('Getting user media with constraints', constraints);
 
-if (location.hostname !== 'localhost') {
-  requestTurn(
-    'https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913'
-  );
-}
+// if (location.hostname !== 'localhost') {
+//   requestTurn(
+//     'https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913'
+//   );
+// }
 
 function maybeStart() {
   console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
