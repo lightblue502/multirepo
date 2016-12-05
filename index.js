@@ -92,9 +92,8 @@ io.on('connection', function(socket) {
     https.get(turnUrl, (res) => {
       
       res.on('data', (chunk) => {
-        var texts = chunk.toString('utf8');
-	sendTurnUrl(texts);
-	// process utf8 text chunk
+          var texts = chunk.toString('utf8');
+	         sendTurnUrl(texts);
       });
 
     }).on('error', (e) => {
